@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { loadImage } from '../cinematic/loadImages'
+import { frameSource } from '../cinematic/frameAssets'
 
 export default function Loader() {
  const [ready, setReady] = useState(false)
@@ -9,8 +10,8 @@ export default function Loader() {
  let cancelled = false
  let completed = 0
  const frames = [
-   { id: 'frame-canvas', path: 'img/frames/frame_000001.png' },
-   { id: 'torrefacao-canvas', path: 'img/torrefacao/frame_000001.png' },
+   { path: frameSource('frames', 0) },
+   { path: frameSource('torrefacao', 0) },
  ]
  const tasks = frames.map(async ({ path }) => {
    await loadImage(path)
