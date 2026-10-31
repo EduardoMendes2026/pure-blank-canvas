@@ -11,8 +11,9 @@ export function useFrameSequence(folder: string, frameCount: number) {
 
   useEffect(() => {
     const section = sectionRef.current
-    const canvas = canvasRef.current
-    if (!section || !canvas) return
+    const canvasElement = canvasRef.current
+    if (!section || !canvasElement) return
+    const canvas: HTMLCanvasElement = canvasElement
     let disposed = false
     let target = 0
     let drawn = -1
