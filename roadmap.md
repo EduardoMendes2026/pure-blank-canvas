@@ -1,2 +1,2 @@
-- [ ] Ajustar as setas do carrossel e verificar ida e volta.
-- [ ] Exibir carrinho com cafés, quantidades e subtotal e verificar alterações.
+- [x] Ajustar as setas do carrossel e verificar ida e volta.
+- [x] Exibir carrinho com cafés, quantidades e subtotal e verificar alterações.
