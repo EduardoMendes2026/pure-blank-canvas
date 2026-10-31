@@ -1,0 +1,211 @@
+@import "tailwindcss";
+
+/* =========================================
+   DESIGN TOKENS — CAFÉ GOUL   Palette derived from original project
+   ========================================= */
+@theme {
+  --color-coffee-950: #17130F;
+  --color-coffee-900: #34251C;
+  --color-coffee-800: #60432E;
+  --color-coffee-400: #D8C5A5;
+  --color-coffee-200: #F1E9DC;
+  --color-coffee-100: #F8F5EF;
+  --color-coffee-green: #344438;
+
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Inter', sans-serif;
+}
+
+/* =========================================
+   BASE ========================================= */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-coffee-950);
+  color: var(--color-coffee-200);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--color-coffee-800);
+  color: var(--color-coffee-100);
+}
+
+/* =========================================
+   TYPOGRAPHY UTILITIES
+   ========================================= */
+.font-editorial {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+/* =========================================
+   ========================================= */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-coffee-950);
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.loader.loader--hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loader-brand {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: var(--color-coffee-400);
+  margin-bottom: 2rem;
+  letter-spacing: 0.1em;
+}
+
+.loader-track {
+  width: 200px;
+  height: 2px;
+  background-color: var(--color-coffee-900);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.loader-bar {
+  height: 100%;
+  width: 0%;
+  background-color: var(--color-coffee-400);
+  transition: width 0.3s ease;
+}
+
+/* =========================================
+   CINEMATIC CAN   ========================================= */
+.cinematic-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.cinematic-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* =========================================
+   HEADER
+   ========================================= */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1.5rem 2rem;
+  transition: background-color 0.4s ease, padding 0.4s ease;
+}
+
+.site-header.header--scrolled {
+  background-color: rgba(23, 19, 15, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 1rem 2rem;
+}
+
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-logo {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: var(--color-coffee-400);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+}
+
+.header-nav {
+  display: flex;
+  gap: 2.5rem;
+}
+
+.header-nav a {
+  color: var(--color-coffee-200);
+  text-decoration: none;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.header-nav a:hover {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .header-nav {
+    display: none;
+  }
+}
+
+/* =========================================
+   FLOATING ========================================= */
+.floating-bean {
+  position: fixed;
+  z-index: 50;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* =========================================
+   SECTION UTILITIES
+   ========================================= */
+.section-label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-coffee-400);
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.1;
+  color: var(--color-coffee-100);
+  margin-bottom: 1.5rem;
+}
+
+.section-body {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: var(--color-coffee-200);
+  opacity: 0.8;
+  max-width: 600px;
+}
+
+/* =========================================
+   REVEAL ANIMATIONS (CSS fallback)
+   ========================================= */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(40px);
+}
