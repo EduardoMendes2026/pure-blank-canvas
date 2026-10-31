@@ -1,7 +1,10 @@
+import { useFrameSequence } from '../cinematic/useFrameSequence'
+
 export default function RoastingSection() {
+  const { sectionRef, canvasRef } = useFrameSequence('torrefacao', 188)
   return (
-    <section id="torrefacao-cinematic" className="cinematic-section">
-      <canvas id="torrefacao-canvas" className="cinematic-canvas" />
+    <section ref={sectionRef} id="torrefacao-cinematic" className="cinematic-section">
+      <canvas ref={canvasRef} id="torrefacao-canvas" className="cinematic-canvas" />
 
       {/* MOMENTO 1 */}
       <div className="torra-narrative torra-moment-1 absolute inset-0 z-[3] flex flex-col items-center justify-center text-center pointer-events-none p-8 opacity-0 will-change-[opacity,transform]">
