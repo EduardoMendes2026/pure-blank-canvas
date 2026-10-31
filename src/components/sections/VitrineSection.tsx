@@ -1,34 +1,65 @@
-const products = [
- { title: 'Origem Selecionada', desc: 'Minas Gerais · Arábica · Natural', fill: '#34251C' },
- { title: 'Reserva Especial', desc: 'Cerrado Mineiro · Bourbon · Lavado', fill: '#60432E' },
- { title: 'Edição Limitada', desc: 'Mantiqueira · Catuaí · Honey', fill: '#344438' },
-]
+import { useRef, useState } from 'react'
+import { ArrowLeft, ArrowRight, ShoppingBag, Plus, Minus, X } from 'lucide-react'
+import Button from '../ui/Button'
+import { products, money, cartTotal } from './coffeeCatalog'
 
 export default function VitrineSection() {
+ const track = useRef<HTMLDivElement>(null)
+ const dialog = useRef<HTMLDialogElement>(null)
+ const [quantities, setQuantities] = useState<Record<string, number>>({})
+ const [notice, setNotice] = useState('')
+ const [position, setPosition] = useState({ start: true, end: false })
+ const count = Object.values(quantities).reduce((sum, quantity) => sum + quantity, 0)
+ const change = (id: string, delta: number) => setQuantities(current => ({ ...current, [id]: Math.max(0, (current[id] ?? 0) + delta) }))
+ const move = (direction: number) => {
+   const element = track.current
+   if (!element) return
+   element.scrollBy({ left: direction * element.clientWidth, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })
+ }
  return (
  <section id="vitrine" className="relative z-10 bg-coffee-100 text-coffee-900 py-[clamp(4rem,10vh,8rem)] px-8">
  <div className="max-w-[1200px] mx-auto">
  <span className="section-label text-coffee-800">Nossos Cafés</span>
- <h2 className="font-serif text-[clamp(1.8rem,4vw,3rem)] leading-tight mb-12 text-coffee-900">
+ <div className="shop-heading">
+ <h2 className="font-serif text-3xl md:text-5xl leading-tight text-coffee-900">
  Da origem à sua mesa
  </h2>
- <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mt-12">
- {products.map((p) => (
- <article key={p.title} className="bg-white rounded overflow-hidden shadow-sm hover:-translate-y-1 hover:shadow-lg transition-all duration-300 pb-8 vitrine-card">
- <div className="w-full aspect-[4/3] overflow-hidden">
- <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" className="w-full h-full">
- <rect width="400" height="300" fill={p.fill} />
- <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" fill="#D8C5A5" fontFamily="serif" fontSize="24">{p.title}</text>
- </svg>
+ <Button className="shop-cart-toggle" onClick={() => dialog.current?.showModal()} aria-label={`Abrir carrinho, ${count} itens`}><ShoppingBag size={18} /> Carrinho <span>{count}</span></Button>
  </div>
- <h3 className="font-serif text-xl mt-6 mx-6 mb-2 text-coffee-900">{p.title}</h3>
- <p className="text-sm text-coffee-800 mx-6 opacity-80">{p.desc}</p>
- <button className="inline-block mt-5 mx-6 text-xs tracking-[0.15em] uppercase text-coffee-900 border-b border-coffee-800 pb-0.5 hover:opacity-60 transition-opacity cursor-pointer">
- Ver detalhes
- </button>
+ <div className="shop-navigation">
+ <span className="shop-status" role="status">{notice}</span>
+ <Button className="shop-arrow" aria-label="Cafés anteriores" title="Cafés anteriores" disabled={position.start} onClick={() => move(-1)}><ArrowLeft size={20} /></Button>
+ <Button className="shop-arrow" aria-label="Próximos cafés" title="Próximos cafés" disabled={position.end} onClick={() => move(1)}><ArrowRight size={20} /></Button>
+ </div>
+ <div className="shop-track" ref={track} aria-label="Cafés à venda" onScroll={event => {
+   const element = event.currentTarget
+   setPosition({ start: element.scrollLeft <= 2, end: element.scrollLeft + element.clientWidth >= element.scrollWidth - 2 })
+ }}>
+ {products.map((p) => (
+ <article key={p.id} className="shop-product vitrine-card">
+ <div className="shop-photo">
+ <img src={p.image} alt={p.name} loading="lazy" width="768" height="768" />
+ </div>
+ <div className="shop-product-info">
+ <h3 className="font-serif text-xl text-coffee-900">{p.name}</h3>
+ <p className="shop-price">{money(p.price)}</p>
+ <Button className="shop-add" onClick={() => { change(p.id, 1); setNotice(`${p.name} adicionado ao carrinho`) }}><Plus size={18} /> Adicionar ao carrinho</Button>
+ </div>
  </article>
  ))}
  </div>
+ <dialog ref={dialog} className="shop-dialog" onClick={event => { if (event.target === event.currentTarget) dialog.current?.close() }}>
+ <div className="shop-dialog-heading"><h3 className="font-serif text-2xl">Seu carrinho</h3><Button className="shop-arrow" aria-label="Fechar carrinho" title="Fechar carrinho" onClick={() => dialog.current?.close()}><X size={20} /></Button></div>
+ {count === 0 ? <p className="shop-empty">Seu carrinho está vazio.</p> : <>
+ <div className="shop-cart-items">{products.filter(p => (quantities[p.id] ?? 0) > 0).map(p => <div className="shop-cart-item" key={p.id}>
+ <img src={p.image} alt={p.name} width="72" height="72" />
+ <div className="shop-cart-detail"><h4>{p.name}</h4><p>{money(p.price)}</p><div className="shop-quantity"><Button className="shop-arrow" aria-label={`Diminuir ${p.name}`} title="Diminuir quantidade" onClick={() => change(p.id, -1)}><Minus size={16} /></Button><span>{quantities[p.id]}</span><Button className="shop-arrow" aria-label={`Aumentar ${p.name}`} title="Aumentar quantidade" onClick={() => change(p.id, 1)}><Plus size={16} /></Button></div></div>
+ <strong>{money(p.price * (quantities[p.id] ?? 0))}</strong>
+ </div>)}</div>
+ <div className="shop-total"><span>Total</span><strong>{money(cartTotal(quantities))}</strong></div>
+ </>}
+ <Button className="shop-add" onClick={() => dialog.current?.close()}>Continuar comprando <ArrowRight size={18} /></Button>
+ </dialog>
  </div>
  </section>
  )
