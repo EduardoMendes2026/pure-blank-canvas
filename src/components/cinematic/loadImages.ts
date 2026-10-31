@@ -11,7 +11,8 @@ export function loadImage(path: string): Promise<HTMLImageElement | null> {
     }
     image.onload = () => finish(image)
     image.onerror = () => finish(null)
-    image.src = `${import.meta.env.BASE_URL}${path}`
+    image.decoding = 'async'
+    image.src = path.startsWith('/') || path.startsWith('https://') ? path : `${import.meta.env.BASE_URL}${path}`
   })
 }
 
@@ -20,8 +21,11 @@ export function drawCover(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   if (!context) return
   const { width, height } = canvas.getBoundingClientRect()
   if (!width || !height) return
-  canvas.width = Math.round(width * window.devicePixelRatio)
-  canvas.height = Math.round(height * window.devicePixelRatio)
+  const pixelRatio = Math.min(window.devicePixelRatio, 2)
+  const pixelWidth = Math.round(width * pixelRatio)
+  const pixelHeight = Math.round(height * pixelRatio)
+  if (canvas.width !== pixelWidth) canvas.width = pixelWidth
+  if (canvas.height !== pixelHeight) canvas.height = pixelHeight
   const scale = Math.max(canvas.width / image.naturalWidth, canvas.height / image.naturalHeight)
   const drawWidth = image.naturalWidth * scale
   const drawHeight = image.naturalHeight * scale
