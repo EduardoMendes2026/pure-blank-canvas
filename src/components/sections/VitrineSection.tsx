@@ -78,7 +78,9 @@ export default function VitrineSection() {
  </div>)}</div>
  <div className="shop-total" aria-live="polite"><span>Subtotal</span><strong>{money(cartTotal(quantities))}</strong></div>
  </>}
- <Button className="shop-add" onClick={() => dialog.current?.close()}>Continuar comprando <ArrowRight size={18} /></Button>
+ <Button className="shop-add" disabled aria-describedby="checkout-unavailable"><ShoppingBag size={18} /> Finalizar compra</Button>
+ <p id="checkout-unavailable" className="text-sm text-coffee-800 my-3">Pagamento online indisponível no momento.</p>
+ <Button className="shop-cart-toggle w-full" onClick={() => dialog.current?.close()}>Continuar comprando <ArrowRight size={18} /></Button>
  </dialog>
  </div>
  </section>
