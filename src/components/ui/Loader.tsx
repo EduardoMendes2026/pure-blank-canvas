@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { drawCover, loadImage } from '../cinematic/loadImages'
+import { loadImage } from '../cinematic/loadImages'
 
 export default function Loader() {
  const [ready, setReady] = useState(false)
@@ -8,22 +8,13 @@ export default function Loader() {
  useEffect(() => {
  let cancelled = false
  let completed = 0
- const observers: ResizeObserver[] = []
  const frames = [
    { id: 'frame-canvas', path: 'img/frames/frame_000001.png' },
    { id: 'torrefacao-canvas', path: 'img/torrefacao/frame_000001.png' },
  ]
- const tasks = frames.map(async ({ id, path }) => {
-   const image = await loadImage(path)
+ const tasks = frames.map(async ({ path }) => {
+   await loadImage(path)
    if (cancelled) return
-   const canvas = document.getElementById(id)
-   if (image && canvas instanceof HTMLCanvasElement) {
-     const draw = () => drawCover(canvas, image)
-     draw()
-     const observer = new ResizeObserver(draw)
-     observer.observe(canvas)
-     observers.push(observer)
-   }
    completed += 1
    if (barRef.current) barRef.current.style.width = `${completed / frames.length * 100}%`
  })
@@ -32,7 +23,6 @@ export default function Loader() {
  })
  return () => {
    cancelled = true
-   observers.forEach((observer) => observer.disconnect())
  }
  }, [])
 

@@ -1,7 +1,10 @@
+import { useFrameSequence } from '../cinematic/useFrameSequence'
+
 export default function HeroSection() {
+ const { sectionRef, canvasRef } = useFrameSequence('frames', 356)
  return (
- <section id="hero-cinematic" className="cinematic-section">
- <canvas id="frame-canvas" className="cinematic-canvas" />
+ <section ref={sectionRef} id="hero-cinematic" className="cinematic-section">
+ <canvas ref={canvasRef} id="frame-canvas" className="cinematic-canvas" />
  <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none z-10 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(23,19,15,0.4)_100%)]">
  <h1 className="font-serif text-[clamp(2.5rem,7vw,6rem)] tracking-[0.15em] text-coffee-100 drop-shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
  CAFÉ GOULART
